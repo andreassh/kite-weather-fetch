@@ -6,7 +6,6 @@ This code is build as a script for fetching weather data for kite app
 It requires the following ENV vars in .env file
 
 ```
-REDIRECT_HOST=http://locahost:3000
 NODE_ENV=development
 PORT=4000
 API_URL=http://localhost:1337
@@ -81,7 +80,7 @@ CAPABILITY_NAMED_IAM
 
 !!important if cloud function already exists use this instead
 ```
-$ aws lambda update-function-code --function-name kite-weather-fetch --s3-bucket kite-weather-fetch --s3-key din-bog-order-processor.zip
+$ aws lambda update-function-code --function-name kite-weather-fetch --s3-bucket kite-weather-fetch --s3-key kite-weather-fetch.zip
 ```
 
 5. Check deploy status (the latest event should say "ResourceStatus": "CREATE_COMPLETE".):
@@ -113,7 +112,7 @@ $ yarn install
 
 ## 2. Clone types lib into project:
 ```
- $ git clone git@bitbucket.org:hotcyborgballs/dinbog-types.git
+ $ git clone git@bitbucket.org:hotcyborgballs/******.git
 ```
 
 ## 3. watch file change and compile
