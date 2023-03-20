@@ -1,0 +1,3 @@
+[submodule "types-kite-app"]
+	path = types-kite-app
+	url = git@bitbucket.org:hotcyborgballs/types-kite-app.git
