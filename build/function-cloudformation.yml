@@ -1,0 +1,36 @@
+Resources:
+  ProcessOrder:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: kite-weather-fetch
+      Handler: bundle.job.run
+      Runtime: nodejs16.x
+      Role: !GetAtt LambdaFunctionRole.Arn
+      MemorySize: 1024
+      Code: 
+        S3Bucket: kite-weather-fetch     
+        S3Key: kite-weather-fetch.zip
+  LambdaFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: AppendToLogsPolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: "*"

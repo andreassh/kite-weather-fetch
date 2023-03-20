@@ -1,0 +1,23 @@
+#  Pipeline for job
+
+image: node:16
+
+pipelines:
+  branches:
+    "{main,master,staging,develop}":
+      - step:
+          name: Test
+          caches:
+            - node
+          script:
+            - git submodule update --init
+            - npm install yarn
+            - yarn install
+            - yarn test
+      - step:
+          name: Code linting
+          script:
+            - npm install eslint
+            - npx eslint .
+          caches:
+            - node

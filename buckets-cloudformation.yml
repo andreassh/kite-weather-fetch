@@ -1,0 +1,7 @@
+Resources:
+
+  # Contains Lambda Function's code.
+  LambdaFunctionCodeBucket: 
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: kite-weather-fetch
