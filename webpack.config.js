@@ -23,7 +23,7 @@ export default {
         exclude: [
           "/node_modules",
           "/**/*.test.ts/",
-          "/dinbog-types", // TODO: replace this with kite-weather types
+          "/kite-app-types", // TODO: replace this with real kite-weather types
         ],
       },
     ],

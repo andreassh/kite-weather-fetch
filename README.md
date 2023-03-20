@@ -45,6 +45,36 @@ an example on webhook request:
 }
 ```
 
+# testing locally
+
+## 1. run yarn install
+```
+$ yarn install
+```
+
+## 2. Clone types lib into project:
+```
+ $ git clone git@bitbucket.org:hotcyborgballs/******.git
+```
+
+## 3. watch file change and compile
+```
+$ yarn start
+```
+
+OR
+
+## 4. Build files
+```
+$ yarn build
+```
+
+## 5. Run script (from order id OR from bookID and character params) 
+
+### Generate PDF from order id:
+```
+$ yarn runjob
+```
 
 ## Build and deploy to AWS Lambda
 
@@ -102,42 +132,4 @@ results lies in function-result.json
 ```
 $ cat function-result.json
 ```
-
-# testing locally
-
-## 1. run yarn install
-```
-$ yarn install
-```
-
-## 2. Clone types lib into project:
-```
- $ git clone git@bitbucket.org:hotcyborgballs/******.git
-```
-
-## 3. watch file change and compile
-```
-$ yarn start
-```
-
-OR
-
-## 4. Build files
-```
-$ yarn build
-```
-
-## 5. Run script (from order id OR from bookID and character params) 
-
-### Generate PDF from order id:
-````
-$ yarn run
-```
-
-e.g.
-````
-  $ yarn run
-```
-
-
 
