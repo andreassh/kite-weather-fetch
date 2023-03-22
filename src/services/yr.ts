@@ -126,7 +126,6 @@ export const getYrForecast = async (lat:number, long:number):Promise<YRForecastD
     let data:YRForecastData;
     if (res.status === 200) {
       data = await res.json();
-      console.log('data', data);
     } else {
       console.log('error res: ', res);
       errorHandler(`Error fetching YR data with url ${url}. status is: ${res.status}: ${res.statusText}`);

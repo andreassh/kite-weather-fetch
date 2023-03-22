@@ -26,3 +26,5 @@ export const convertYrForecastToInputs = (forecast:YRForecastData):YrForecastInp
     }
   });
 }
+
+export default {convertYrForecastToInputs}

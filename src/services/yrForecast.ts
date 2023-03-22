@@ -1,14 +1,16 @@
 import { gql } from "@apollo/client/core/index.js";
-import { YrForecastEntityResponse, YrForecastInput } from "../../types-kite-app/dist/es/Types";
+import { YrForecastEntityResponse, YrForecastEntityResponseCollection, YrForecastInput } from "../../types-kite-app/dist/es/Types";
 import client from "../client";
 
-export const YR_FORECAST_FIELDS = gql`
-  fragment SpotFields on SpotEntity  {
-    id
-    attributes {
-      name
-      lat
-      long
+type EntryID = string|number|undefined|null;
+
+
+export const GET_YR_FORECAST = gql`
+  query GetYrForecast($unique_constraint: String) {
+    yrForecasts(pagination: {limit:1} filters:{unique_constraint:{eq: $unique_constraint}}) {
+      data{
+        id
+      }
     }
   }
 `;
@@ -23,9 +25,42 @@ export const CREATE_YR_FORECAST = gql`
   }
 `
 
-export const createYrForecast = async (params: YrForecastInput):Promise<string|number|undefined|null> => {
+
+export const UPDATE_YR_FORECAST = gql`
+  mutation UpdateForecast( 
+    $id: ID! 
+    $data: YrForecastInput!) {
+    updateYrForecast(
+      id: $id,
+      data: $data
+    ) {
+      data {
+        id
+      }
+    }
+  }
+`
+
+
+
+export const doesYrForecastExist = async (unique_constraint: string):Promise<EntryID> => {
+  /**
+   * Return string or number of entry ID if entry exists
+  */
+  const { data } = await client.query<{yrForecasts: YrForecastEntityResponseCollection}>({
+    query: GET_YR_FORECAST,
+    fetchPolicy: 'no-cache',
+    variables: {
+      unique_constraint
+    }
+  });
+
+  return data?.yrForecasts?.data.length ? data.yrForecasts.data[0].id : null;
+}
+
+export const createYrForecast = async (params: YrForecastInput):Promise<EntryID> => {
   // TODO: create a update or create if has entry with same timestamp
-  console.log('createYrForecast from params', params);
+  console.log('create YrForecast with timestamp', params.timestamp);
   const { data } = await client.mutate<{createYrForecast: YrForecastEntityResponse}>({
     mutation: CREATE_YR_FORECAST,
     variables: {
@@ -36,4 +71,23 @@ export const createYrForecast = async (params: YrForecastInput):Promise<string|n
   return data?.createYrForecast?.data?.id;
 }
 
-export default {createYrForecast};
+export const updateYrForecast = async (id: string|number, params: YrForecastInput):Promise<EntryID> => {
+  console.log('update YrForecast with timestamp', params.timestamp);
+  const { data } = await client.mutate<{updateYrForeCast: YrForecastEntityResponse}>({
+    mutation: UPDATE_YR_FORECAST,
+    variables: {
+      id, 
+      data: params
+    }
+  });
+
+  return data?.updateYrForeCast?.data?.id;
+}
+
+export const createOrUpdateYrForecast = async (params: YrForecastInput):Promise<EntryID> => {
+  const forecastId = await doesYrForecastExist(params.unique_constraint);
+  return forecastId ? updateYrForecast(forecastId, params) : createYrForecast(params);
+}
+
+
+export default {createYrForecast,updateYrForecast,createOrUpdateYrForecast};
