@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { SpotEntity } from "../types-kite-app/dist/es/Types";
 import errorHandler from "./errorHandler";
 import getSpots from "./services/spot";
-import { getYrForecast } from "./services/yr";
+import { getYrForecast, YRForecastData } from "./services/yr";
 import { createYrForecast } from "./services/yrForecast";
 import { convertYrForecastToInputs } from "./utils/yr";
 
@@ -14,17 +14,24 @@ export interface RunProps {
 }
 
 export const processSpot = async (spot: SpotEntity) => {
-  try {
-    let data = await getYrForecast(spot.attributes.lat, spot.attributes.long);
-    // covert data to yr forecast inputs
-    const timeseries = convertYrForecastToInputs(data);
-    // loop everty spot data entitiy to save info
-    for(let i=0;i<timeseries.length;i++) {
-      await createYrForecast(timeseries[i]);
-    }
+  let yrForecast: YRForecastData;
+  try{
+    yrForecast = await getYrForecast(spot.attributes.lat, spot.attributes.long);
   } catch(err) {
     console.error(err);
     errorHandler("Failed to fetch spot data from spot", spot.attributes.name);
+  }
+
+  // covert data to yr forecast inputs
+  const timeseries = convertYrForecastToInputs(yrForecast);
+  // loop everty spot data entitiy to save info
+  for(let i=0;i<timeseries.length;i++) {
+    try {
+      await createYrForecast(timeseries[i]);
+    } catch(err) {
+      console.log("Failed to create YR forecast entry:");
+      console.error(err);
+    }
   }
 }
 
