@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client/core/index.js";
 import { SpotEntity, SpotEntityResponseCollection } from "../../types-kite-app/dist/es/Types";
+import { getToken } from "../auth";
 import client from "../client";
 
 export const SPOT_FIELDS = gql`
@@ -29,7 +30,7 @@ export const getSpots = async (token:string = ""):Promise<SpotEntity[]> => {
     query: GET_SPOTS,
     fetchPolicy: 'no-cache',
     context: {
-      token
+      token: token||getToken(),
     }
   });
 

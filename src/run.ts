@@ -4,6 +4,7 @@ import errorHandler from "./errorHandler";
 import getSpots from "./services/spot";
 import { getYrForecast } from "./services/yr";
 import { createYrForecast } from "./services/yrForecast";
+import { convertYrForecastToInputs } from "./utils/yr";
 
 dotenv.config();
 
@@ -15,9 +16,11 @@ export interface RunProps {
 export const processSpot = async (spot: SpotEntity) => {
   try {
     let data = await getYrForecast(spot.attributes.lat, spot.attributes.long);
+    // covert data to yr forecast inputs
+    const timeseries = convertYrForecastToInputs(data);
     // loop everty spot data entitiy to save info
-    for(let i=0;i<data.length;i++) {
-      await createYrForecast(data[i]);
+    for(let i=0;i<timeseries.length;i++) {
+      await createYrForecast(timeseries[i]);
     }
   } catch(err) {
     console.error(err);
@@ -26,7 +29,8 @@ export const processSpot = async (spot: SpotEntity) => {
 }
 
 export const run = async (req?:RunProps):Promise<boolean> => {
-  console.log("Running job from req.body", req?.body);
+  const params = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  console.log("Running job from params", params);
 
   let spots:SpotEntity[] = [];
   // get all spots.
@@ -39,7 +43,7 @@ export const run = async (req?:RunProps):Promise<boolean> => {
 
   // for each spot, get forecast
   for (let i=0; i<spots.length;i++) {
-    spots.forEach(async (s) => processSpot(s))
+    await processSpot(spots[i]);
   }
 
   // returning dummy promise for now

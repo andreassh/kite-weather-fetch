@@ -16,7 +16,7 @@ const authLink = setContext((_, context) => {
   return {
     headers: {
       ...context.headers,
-      authorization: process.env.API_TOKEN ? `Bearer ${process.env.API_TOKEN}` : "",
+      authorization: `Bearer ${context.token||process.env.API_TOKEN}`,
     },
   };
 });

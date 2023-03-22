@@ -10,7 +10,8 @@ const port = process.env.PORT;
 
 app.post("/", async (req, res) => {
   try {
-    const orderRes = await run(req);
+    const params = JSON.parse(req?.body);
+    const orderRes = await run({body:params, headers:req.headers});
     res.send({"success": orderRes});
   } catch (err) {
     console.error(err);
