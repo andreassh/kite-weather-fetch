@@ -60,7 +60,6 @@ export const doesFcooForecastExist = async (unique_constraint: string):Promise<E
 }
 
 export const createFcooForecast = async (params: FcooForecastInput):Promise<EntryID> => {
-  // TODO: create a update or create if has entry with same timestamp
   console.log('create FcooForecast with timestamp', params.timestamp);
   const { data } = await client.mutate<{createFcooForecast: FcooForecastEntityResponse}>({
     mutation: CREATE_FCOO_FORECAST,

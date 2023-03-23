@@ -32,7 +32,7 @@ export const processYrSpot = async (spot: SpotEntity) => {
     try {
       await createOrUpdateYrForecast(timeseries[i]);
     } catch(err) {
-      console.log("Failed to create YR forecast entry:");
+      console.log("Failed to create or update YR forecast entry:");
       console.error(err);
     }
   }
@@ -54,14 +54,14 @@ export const processFcooSpot = async (spot: SpotEntity) => {
     try {
       await createOrUpdateFcooForecast(timeseries[i]);
     } catch(err) {
-      console.log("Failed to create YR forecast entry:");
+      console.log("Failed to create or update FCOO forecast entry:");
       console.error(err);
     }
   }
 }
 
 export const processSpot = async (spot:SpotEntity) => {
-  await processYrSpot(spot);
+  // await processYrSpot(spot);
   await processFcooSpot(spot);
 }
 

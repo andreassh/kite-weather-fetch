@@ -23,7 +23,7 @@ export default {
         exclude: [
           "/node_modules",
           "/**/*.test.ts/",
-          "/kite-app-types", // TODO: replace this with real kite-weather types
+          "/types-kite-app",
         ],
       },
     ],

@@ -6,7 +6,7 @@ import { delay } from "../utils/utils";
 
 dotenv.config();
 
-const apiUrl = process.env.YR_API_URL ;
+const apiUrl = process.env.FCOO_API_URL ;
 export type FcooForecastDataAttributes = {
   lat: number
   attributes: {
@@ -39,7 +39,7 @@ export const getFcooForecast = async (lat:number, long:number):Promise<FcooForec
   // NOTE: we must not do this request to often (max 20/s), and not use over 4 decimals for lat,long. otherwise we receive 403
   // https://developer.yr.no/doc/TermsOfService/
 
-  const url = `${apiUrl}/data/timeseries?variables=Wind,WindSpeed,Precipitation,AirTemperature,WavePeriod,WaveHeight&lat=${lat.toFixed(4)}&lon=${long.toFixed(4)}`;
+  const url = `${apiUrl}/data/timeseries?variables=Wind,WindSpeed,Precipitation,AirTemperature&lat=${lat.toFixed(4)}&lon=${long.toFixed(4)}`;
 
   try {
     console.log('fetching url', url);

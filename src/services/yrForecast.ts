@@ -59,7 +59,6 @@ export const doesYrForecastExist = async (unique_constraint: string):Promise<Ent
 }
 
 export const createYrForecast = async (params: YrForecastInput):Promise<EntryID> => {
-  // TODO: create a update or create if has entry with same timestamp
   console.log('create YrForecast with timestamp', params.timestamp);
   const { data } = await client.mutate<{createYrForecast: YrForecastEntityResponse}>({
     mutation: CREATE_YR_FORECAST,
