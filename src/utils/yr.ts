@@ -1,9 +1,9 @@
 import { YrForecastInput } from "../../types-kite-app/dist/es/Types";
 import { YRForecastData } from "../services/yr";
 
-const symbolCodeToStr = (code:string) => {
-  // TODO: Build converter from table: https://nrkno.github.io/yr-weather-symbols/
-  return "to_be_implemented"
+const symbolCodeToStr = (code:string):string|undefined => {
+  // if we need some kind of conversion, do it here... https://api.met.no/weatherapi/weathericon/2.0/documentation
+  return undefined;
 }
 
 export const convertYrForecastToInputs = (forecast:YRForecastData):YrForecastInput[] => {
