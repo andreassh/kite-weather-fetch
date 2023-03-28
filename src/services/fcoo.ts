@@ -1,12 +1,10 @@
-import { YrForecastInput } from "../../types-kite-app/dist/es/Types";
-import fetch from 'cross-fetch';
 import dotenv from "dotenv";
 import errorHandler from "../errorHandler";
-import { delay } from "../utils/utils";
+import { fetch } from "./fetch";
 
 dotenv.config();
 
-const apiUrl = process.env.FCOO_API_URL ;
+const apiUrl = process.env.FCOO_API_URL||"https://app.fcoo.dk/metoc/v2";
 export type FcooForecastDataAttributes = {
   lat: number
   attributes: {
@@ -34,6 +32,7 @@ export type FcooForecastData = {
       VGRD: FcooForecastDataAttributes
   }
 }
+
 export const getFcooForecast = async (lat:number, long:number):Promise<FcooForecastData> => {
 
   // NOTE: we must not do this request to often (max 20/s), and not use over 4 decimals for lat,long. otherwise we receive 403

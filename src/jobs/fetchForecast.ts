@@ -1,13 +1,13 @@
 import dotenv from "dotenv";
-import { SpotEntity } from "../types-kite-app/dist/es/Types";
-import errorHandler from "./errorHandler";
-import { FcooForecastData, getFcooForecast } from "./services/fcoo";
-import { createOrUpdateFcooForecast } from "./services/fcooForecast";
-import getSpots from "./services/spot";
-import { getYrForecast, YRForecastData } from "./services/yr";
-import { createOrUpdateYrForecast } from "./services/yrForecast";
-import { convertFcooForecastToInputs } from "./utils/fcoo";
-import { convertYrForecastToInputs } from "./utils/yr";
+import { SpotEntity } from "../../types-kite-app/dist/es/Types";
+import errorHandler from "../errorHandler";
+import { FcooForecastData, getFcooForecast } from "../services/fcoo";
+import { createOrUpdateFcooForecast } from "../services/fcooForecast";
+import getSpots from "../services/spot";
+import { getYrForecast, YRForecastData } from "../services/yr";
+import { createOrUpdateYrForecast } from "../services/yrForecast";
+import { convertFcooForecastToInputs } from "../utils/fcoo";
+import { convertYrForecastToInputs } from "../utils/yr";
 
 dotenv.config();
 
@@ -65,8 +65,11 @@ export const processSpot = async (spot:SpotEntity) => {
   await processFcooSpot(spot);
 }
 
-export const run = async (req?:RunProps):Promise<boolean> => {
-  const params = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+export const fetchForecast = async (req?:RunProps):Promise<boolean> => {
+  let params = {};
+  if (req?.body) {
+    params = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  }
   console.log("Running job from params", params);
 
   let spots:SpotEntity[] = [];
@@ -88,4 +91,4 @@ export const run = async (req?:RunProps):Promise<boolean> => {
   return await new Promise((res) => res(true));
 };
 
-export default {run};
+export default {fetchForecast};

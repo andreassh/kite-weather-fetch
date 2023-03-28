@@ -3,12 +3,12 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default {
-  entry: "./src/run.ts",
+  entry: "./src/jobs/index.ts",
   target: "node",
   devtool: "source-map",
   output: {
     path: path.resolve(__dirname, "build"),
-    library: "job",
+    library: "jobs",
     libraryTarget: "commonjs2",
     filename: "bundle.js",
   },

@@ -10,7 +10,8 @@
     "build:dev": "webpack --mode=development && cp -r src/data ./build",
     "build:aws": "yarn build && (cd build && zip -ry '../function-dist.zip' *) && aws s3 cp function-dist.zip s3://kite-weather-fetch/kite-weather-fetch.zip && rm -r function-dist.zip",
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
-    "runjob": "node --trace-deprecation -e 'var app = require(\"./build/bundle.cjs\"); app.job.run()'",
+    "job:fetchForecast": "node --trace-deprecation -e 'var app = require(\"./build/bundle.cjs\"); app.jobs.fetchForecast()'",
+    "job:surfability": "node --trace-deprecation -e 'var app = require(\"./build/bundle.cjs\"); app.jobs.surfability()'",
     "deploy": "aws lambda update-function-code --function-name kite-weather-fetch --s3-bucket kite-weather-fetch --s3-key kite-weather-fetch.zip"
   },
   "engines": {

@@ -1,5 +1,5 @@
 import express from "express";
-import { run } from "../src/run";
+import { fetchForecast } from "../src/jobs/fetchForecast";
 
 const app = express();
 app.use(
@@ -11,7 +11,7 @@ const port = process.env.PORT;
 app.post("/", async (req, res) => {
   try {
     const params = JSON.parse(req?.body);
-    const orderRes = await run({body:params, headers:req.headers});
+    const orderRes = await fetchForecast({body:params, headers:req.headers});
     res.send({"success": orderRes});
   } catch (err) {
     console.error(err);

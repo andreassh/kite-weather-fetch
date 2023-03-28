@@ -3,7 +3,7 @@ Resources:
     Type: 'AWS::Lambda::Function'
     Properties:
       FunctionName: kite-weather-fetch
-      Handler: bundle.job.run
+      Handler: bundle.jobs.fetchForecast
       Runtime: nodejs16.x
       Role: !GetAtt LambdaFunctionRole.Arn
       MemorySize: 1024
