@@ -22,7 +22,7 @@ export default {
         test: /\.ts?$/,
         exclude: [
           "/node_modules",
-          "/**/*.test.ts/",
+          "/tests/*.test.ts",
           "/types-kite-app",
         ],
       },
