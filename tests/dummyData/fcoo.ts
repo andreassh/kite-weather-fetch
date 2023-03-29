@@ -1,4 +1,21 @@
 import { FcooForecastData } from "../../src/services/fcoo";
+import { FcooForecastInput } from "../../types-kite-app/dist/es/Types";
+
+export const dummyFcooForecastInput:FcooForecastInput = {
+    forecast: {
+        air_temperature: 0.25,
+        probability_of_precipitation: 0,
+        probability_of_thunder: -1,
+        symbol: '',
+        symbol_code: '',
+        symbol_confidence: '',
+        wind_from_direction: 39,
+        wind_speed: 6.25,
+        wind_speed_of_gust: -1
+    },
+    timestamp: '2023-03-28T06:00:00Z',
+    unique_constraint: '2023-03-28T06:00:00Z_55.81911.919'
+}
 
 export const dummyFcooSpotData:FcooForecastData = {
   "Precipitation": {

@@ -19,13 +19,13 @@ export const convertFcooForecastToInputs = (forecast:FcooForecastData):FcooForec
       forecast: {
         air_temperature: forecast.AirTemperature.TMP.data[idx],
         probability_of_precipitation: forecast.Precipitation.precip.data[idx],
-        probability_of_thunder: undefined,
-        symbol: undefined,
-        symbol_code: undefined,
-        symbol_confidence: undefined,
+        probability_of_thunder: -1,
+        symbol: "",
+        symbol_code: "",
+        symbol_confidence: "",
         wind_from_direction: covertFcooWindDirToDegrees(forecast.Wind.UGRD.data[idx]), // TODO: check that this fits correctly with fcoo visualization!!
         wind_speed: forecast.WindSpeed.windspeed.data[idx],
-        wind_speed_of_gust: undefined,
+        wind_speed_of_gust: -1,
       },
       timestamp: t,
       unique_constraint: `${t}_${forecast.WindSpeed.windspeed.lat}${forecast.WindSpeed.windspeed.lon}` 

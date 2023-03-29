@@ -61,7 +61,7 @@ export const processFcooSpot = async (spot: SpotEntity) => {
 }
 
 export const processSpot = async (spot:SpotEntity) => {
-  // await processYrSpot(spot);
+  await processYrSpot(spot);
   await processFcooSpot(spot);
 }
 

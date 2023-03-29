@@ -1,12 +1,12 @@
-import { gql } from "@apollo/client/core/index.js";
-import { FcooForecastEntityResponseCollection, FcooForecastInput, YrForecastEntityResponse, YrForecastEntityResponseCollection, YrForecastInput } from "../../types-kite-app/dist/es/Types";
-import { FcooForecastEntityResponse } from "../../types-kite-app/src/Types";
-import client from "../client";
+import {FcooForecastInput} from "../../types-kite-app/dist/es/Types";
+import errorHandler from "../errorHandler";
+import { getApiUrl, getDefaultApiHeaders } from "./api";
+import { fetch } from "./fetch";
 
 type EntryID = string|number|undefined|null;
 
 
-export const GET_FCOO_FORECAST = gql`
+export const GET_FCOO_FORECAST = `
   query GetFcooForecast($unique_constraint: String) {
     fcooForecasts(pagination: {limit:1} filters:{unique_constraint:{eq: $unique_constraint}}) {
       data{
@@ -16,7 +16,7 @@ export const GET_FCOO_FORECAST = gql`
   }
 `;
 
-export const CREATE_FCOO_FORECAST = gql`
+export const CREATE_FCOO_FORECAST = `
   mutation CreateForecast( $data: FcooForecastInput!) {
     createFcooForecast(data: $data) {
       data {
@@ -27,7 +27,7 @@ export const CREATE_FCOO_FORECAST = gql`
 `
 
 
-export const UPDATE_FCOO_FORECAST = gql`
+export const UPDATE_FCOO_FORECAST = `
   mutation UpdateForecast( 
     $id: ID! 
     $data: FcooForecastInput!) {
@@ -48,43 +48,81 @@ export const doesFcooForecastExist = async (unique_constraint: string):Promise<E
   /**
    * Return string or number of entry ID if entry exists
   */
-  const { data } = await client.query<{fcooForecasts: FcooForecastEntityResponseCollection}>({
-    query: GET_FCOO_FORECAST,
-    fetchPolicy: 'no-cache',
-    variables: {
-      unique_constraint
+  try {
+    const res = await fetch(getApiUrl(), {
+      method: 'POST',
+      headers: getDefaultApiHeaders(),
+      body: JSON.stringify({
+        query: GET_FCOO_FORECAST,
+        variables: {
+          unique_constraint
+        }
+      }),
+    });
+    const {data, errors} = await res.json();
+    if (errors) {
+      console.error(errors);
+      errorHandler(`Error getting fcoo forecast entry from unique_constraint: ${unique_constraint}`);
     }
-  });
-
-  return data?.fcooForecasts?.data.length ? data.fcooForecasts.data[0].id : null;
+    return data?.fcooForecasts?.data.length ? data?.fcooForecasts.data[0].id : null;
+  } catch (err) {
+    console.error(err);
+    errorHandler(`Error getting fcoo forecast entry from unique_constraint: ${unique_constraint}`);
+  }
 }
 
 export const createFcooForecast = async (params: FcooForecastInput):Promise<EntryID> => {
   console.log('create FcooForecast with timestamp', params.timestamp);
-  const { data } = await client.mutate<{createFcooForecast: FcooForecastEntityResponse}>({
-    mutation: CREATE_FCOO_FORECAST,
-    variables: {
-      data: params
+  try {
+    const res = await fetch(getApiUrl(), {
+      method: 'POST',
+      headers: getDefaultApiHeaders(),
+      body: JSON.stringify({
+        query: CREATE_FCOO_FORECAST,
+        variables: {
+          data: params
+        }
+      }),
+    });
+    const {data, errors} = await res.json();
+    if (errors) {
+      console.error(errors);
+      errorHandler(`Error creating FCOO forecast from params: ${params}`);
     }
-  });
-
-  return data?.createFcooForecast?.data?.id;
+    return data?.createFcooForecast?.data?.id;
+  }  catch (err) {
+    console.error(err);
+    errorHandler(`Error creating FCOO forecast from params: ${params}`);
+  }
 }
 
 export const updateFcooForecast = async (id: string|number, params: FcooForecastInput):Promise<EntryID> => {
   console.log('update FcooForecast with timestamp', params.timestamp);
-  const { data } = await client.mutate<{updateFcooForeCast: FcooForecastEntityResponse}>({
-    mutation: UPDATE_FCOO_FORECAST,
-    variables: {
-      id, 
-      data: params
+  try {
+    const res = await fetch(getApiUrl(), {
+      method: 'POST',
+      headers: getDefaultApiHeaders(),
+      body: JSON.stringify({
+        query: UPDATE_FCOO_FORECAST,
+        variables: {
+          id, 
+          data: params
+        }
+      }),
+    });
+    const {data, errors} = await res.json();
+    if (errors) {
+      console.error(errors);
+      errorHandler(`Error updating FCOO forecast from id: ${id} and params: ${params}`);
     }
-  });
-
-  return data?.updateFcooForeCast?.data?.id;
+    return data?.updateFcooForeCast?.data?.id;
+  }  catch (err) {
+    console.error(err);
+    errorHandler(`Error updating FCOO forecast from id: ${id} and params: ${params}`);
+  }
 }
 
-export const createOrUpdateFcooForecast = async (params: YrForecastInput):Promise<EntryID> => {
+export const createOrUpdateFcooForecast = async (params: FcooForecastInput):Promise<EntryID> => {
   const forecastId = await doesFcooForecastExist(params.unique_constraint);
   return forecastId ? updateFcooForecast(forecastId, params) : createFcooForecast(params);
 }
