@@ -73,7 +73,7 @@ export const doesYrForecastExist = async (unique_constraint: string):Promise<Ent
 }
 
 export const createYrForecast = async (params: YrForecastInput):Promise<EntryID> => {
-  console.log('create YrForecast with timestamp', params.timestamp);
+  // console.log('create YrForecast with timestamp', params.timestamp);
 
   try {
     const res = await fetch(getApiUrl(), {

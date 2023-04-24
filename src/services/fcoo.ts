@@ -41,7 +41,7 @@ export const getFcooForecast = async (lat:number, long:number):Promise<FcooForec
   const url = `${apiUrl}/data/timeseries?variables=Wind,WindSpeed,Precipitation,AirTemperature&lat=${lat.toFixed(4)}&lon=${long.toFixed(4)}`;
 
   try {
-    console.log('fetching url', url);
+    // console.log('fetching url', url);
     const res = await fetch(url,{
       headers: {
         "User-Agent": "tuna.digital contact@tuna.digital"

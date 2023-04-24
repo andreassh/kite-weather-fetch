@@ -72,7 +72,7 @@ export const doesFcooForecastExist = async (unique_constraint: string):Promise<E
 }
 
 export const createFcooForecast = async (params: FcooForecastInput):Promise<EntryID> => {
-  console.log('create FcooForecast with timestamp', params.timestamp);
+  // console.log('create FcooForecast with timestamp', params.timestamp);
   try {
     const res = await fetch(getApiUrl(), {
       method: 'POST',

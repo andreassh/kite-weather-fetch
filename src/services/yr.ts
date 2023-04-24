@@ -116,7 +116,7 @@ export const getYrForecast = async (lat:number, long:number):Promise<YRForecastD
   const url = `${apiUrl}/?lat=${lat.toFixed(4)}&lon=${long.toFixed(4)}`;
 
   try {
-    console.log('fetching url', url);
+    // console.log('fetching url', url);
     const res = await fetch(url,{
       headers: {
         "User-Agent": "tuna.digital contact@tuna.digital"

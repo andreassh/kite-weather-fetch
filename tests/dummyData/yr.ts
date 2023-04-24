@@ -1,5 +1,5 @@
 import { YRForecastData } from "../../src/services/yr";
-import { YrForecastInput } from "../../types-kite-app/dist/es/Types";
+import { YrForecastEntity, YrForecastInput } from "../../types-kite-app/dist/es/Types";
 
 export const dummyYrForecastInput:YrForecastInput = {
   forecast: {
@@ -122,5 +122,25 @@ const dummyYrSpotData: YRForecastData = {
     ],
   },
 };
+
+// example used for beginner nono, but intermediate and expert, jai jai woop woop
+export const dummyYrEntityIntermediate: YrForecastEntity = {
+  id: "1",
+  attributes: {
+    forecast: {
+      air_temperature:15.0,
+      id: "1",
+      probability_of_precipitation: 14,
+      probability_of_thunder: 0.2,
+      symbol_code: "cloudy",
+      symbol_confidence: "somewhat certain",
+      wind_from_direction: 212.8,
+      wind_speed: 7,
+      wind_speed_of_gust: 9,
+    },
+    unique_constraint: "this_is_unique_1",
+    uuid: "1",
+  }
+}
 
 export default dummyYrSpotData;

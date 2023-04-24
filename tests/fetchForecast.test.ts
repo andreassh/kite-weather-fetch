@@ -6,6 +6,7 @@ import dummyYrSpotData, { dummyYrForecastInput } from "./dummyData/yr";
 import { convertYrForecastToInputs } from "../src/utils/yr";
 import { convertFcooForecastToInputs } from "../src/utils/fcoo";
 import { dummySpots } from "./dummyData/spot";
+import { toFetchRes } from "./utils";
 
 jest.unstable_mockModule("../src/services/fetch", () => fetchMock);
 
@@ -28,7 +29,7 @@ describe("Testing fetch of forecasts", () => {
     const lat = 55.821392;
     const long = 11.937256;
 
-    jest.spyOn(fetchService, "fetch").mockResolvedValue({status: 200, json: () => Promise.resolve(dummyFcooSpotData)} as Response);
+    jest.spyOn(fetchService, "fetch").mockResolvedValue(toFetchRes(dummyFcooSpotData));
     
     const result = await fcooService.getFcooForecast(lat, long);
 
@@ -52,7 +53,7 @@ describe("Testing fetch of forecasts", () => {
     const lat = 55.821392;
     const long = 11.937256;
 
-    jest.spyOn(fetchService, "fetch").mockResolvedValue({status: 200, json: () => Promise.resolve(dummyYrSpotData)} as Response);
+    jest.spyOn(fetchService, "fetch").mockResolvedValue(toFetchRes(dummyYrSpotData));
     
     const result = await yrService.getYrForecast(lat, long);
 
@@ -73,7 +74,7 @@ describe("Testing fetch of forecasts", () => {
     const spotService = await import("../src/services/spot");
     const fetchService = await import("../src/services/fetch");
 
-    jest.spyOn(fetchService, "fetch").mockResolvedValue({status: 200, json: () => Promise.resolve({data: {spots: {data: dummySpots}}})} as Response);
+    jest.spyOn(fetchService, "fetch").mockResolvedValue(toFetchRes({data: {spots: {data: dummySpots}}}));
     
     const result = await spotService.getSpots();
 
@@ -96,7 +97,7 @@ describe("Testing fetch of forecasts", () => {
     const fetchService = await import("../src/services/fetch");
 
     // mocking GraphQL response
-    jest.spyOn(fetchService, "fetch").mockResolvedValue({ status: 200, json: () => Promise.resolve({
+    jest.spyOn(fetchService, "fetch").mockResolvedValue(toFetchRes({
       data: {
         createYrForecast: {
           data: {
@@ -104,7 +105,7 @@ describe("Testing fetch of forecasts", () => {
           }
         }
       }
-    })} as Response);
+    }));
     const result = await yrForecastService.createOrUpdateYrForecast(dummyYrForecastInput);
 
     // fetch should be called twice. Once to find out if record exits and once to create record.
@@ -117,7 +118,7 @@ describe("Testing fetch of forecasts", () => {
     const fetchService = await import("../src/services/fetch");
 
     // mocking GraphQL response
-    jest.spyOn(fetchService, "fetch").mockResolvedValue({ status: 200, json: () => Promise.resolve({
+    jest.spyOn(fetchService, "fetch").mockResolvedValue(toFetchRes({
       data: {
         createFcooForecast: {
           data: {
@@ -125,7 +126,7 @@ describe("Testing fetch of forecasts", () => {
           }
         }
       }
-    })} as Response);
+    }));
     const result = await fcooForecastService.createOrUpdateFcooForecast(dummyFcooForecastInput);
 
     // fetch should be called twice. Once to find out if record exits and once to create record.
@@ -133,18 +134,25 @@ describe("Testing fetch of forecasts", () => {
     expect(result).toEqual("1");
   });
 
-  test("it should be able to fetch af save all forecasts", async () => {
+  test("it should be able to fetch and save all forecasts", async () => {
     /* await import("../src/services/spot");
     await import("../src/services/fcooForecast");
     await import("../src/services/yrForecast"); */
     const jobs = await import("../src/jobs");
     const fetchService = await import("../src/services/fetch");
 
-    TODO: fixe tests
-
     jest.spyOn(fetchService, "fetch").mockImplementation(async (url, init) => {
-      console.log('mocking fetch to url:', url);
-      return {status: 200, json: () => Promise.resolve({data: {spots: {data: dummySpots}}})} as Response;
+      // console.log('mocking fetch to url:', url);
+
+      // check which fetch and return according to service
+      if (url.toString().split("://api.met.no").length > 1) {
+        return toFetchRes(dummyYrSpotData);
+      } else if (url.toString().split("://app.fcoo.dk").length > 1) {
+        return toFetchRes(dummyFcooSpotData);
+      }
+
+      // default is to return dummy spots
+      return toFetchRes({data: {spots: {data: dummySpots}}});
     });
 
     const jobRes = await jobs.fetchForecast({body:{}, headers:{}});

@@ -38,9 +38,7 @@ export const getSpots = async ():Promise<SpotEntity[]> => {
         query: GET_SPOTS,
       }),
     });
-    console.log('got from fetch', res);
     const {data, errors} = await res.json();
-    console.log('data is', data);
     if (errors) {
       console.error(errors);
       errorHandler(defaultErrMsg);
