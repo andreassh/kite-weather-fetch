@@ -1,5 +1,6 @@
-import { FcooForecastInput } from "../../types-kite-app/dist/es/Types";
+import { Enum_Componentforecastforecast_Wind_Direction, FcooForecastInput } from "../../types-kite-app/dist/es/Types";
 import { FcooForecastData } from "../services/fcoo";
+import { degreesToCompass } from "./weather";
 
 export const covertFcooWindDirToDegrees = (windDir:number) => {
   /**  
@@ -15,6 +16,7 @@ export const covertFcooWindDirToDegrees = (windDir:number) => {
 
 export const convertFcooForecastToInputs = (forecast:FcooForecastData):FcooForecastInput[] => { 
   return forecast.WindSpeed.windspeed.time.map((t,idx) => {
+    const windDegrees = covertFcooWindDirToDegrees(forecast.Wind.UGRD.data[idx]);
     return {
       forecast: {
         air_temperature: forecast.AirTemperature.TMP.data[idx],
@@ -23,9 +25,10 @@ export const convertFcooForecastToInputs = (forecast:FcooForecastData):FcooForec
         symbol: "",
         symbol_code: "",
         symbol_confidence: "",
-        wind_from_direction: covertFcooWindDirToDegrees(forecast.Wind.UGRD.data[idx]), // TODO: check that this fits correctly with fcoo visualization!!
+        wind_from_direction: windDegrees, // TODO: check that this fits correctly with fcoo visualization!!
         wind_speed: forecast.WindSpeed.windspeed.data[idx],
         wind_speed_of_gust: -1,
+        wind_direction: degreesToCompass(windDegrees) as Enum_Componentforecastforecast_Wind_Direction,
       },
       timestamp: t,
       unique_constraint: `${t}_${forecast.WindSpeed.windspeed.lat}${forecast.WindSpeed.windspeed.lon}` 

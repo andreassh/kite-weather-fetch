@@ -1,5 +1,5 @@
 import { YRForecastData } from "../../src/services/yr";
-import { YrForecastEntity, YrForecastInput } from "../../types-kite-app/dist/es/Types";
+import { Enum_Componentforecastforecast_Wind_Direction, YrForecastEntity, YrForecastInput } from "../../types-kite-app/dist/es/Types";
 
 export const dummyYrForecastInput:YrForecastInput = {
   forecast: {
@@ -123,8 +123,8 @@ const dummyYrSpotData: YRForecastData = {
   },
 };
 
-// example used for beginner nono, but intermediate and expert, jai jai woop woop
-export const dummyYrEntityIntermediate: YrForecastEntity = {
+
+export const dummyYrEntityBeginner: YrForecastEntity = {
   id: "1",
   attributes: {
     forecast: {
@@ -135,11 +135,33 @@ export const dummyYrEntityIntermediate: YrForecastEntity = {
       symbol_code: "cloudy",
       symbol_confidence: "somewhat certain",
       wind_from_direction: 212.8,
+      wind_direction: Enum_Componentforecastforecast_Wind_Direction.Sw,
       wind_speed: 7,
       wind_speed_of_gust: 9,
     },
     unique_constraint: "this_is_unique_1",
     uuid: "1",
+  }
+}
+
+// example used for beginner nono, but intermediate and expert, jai jai woop woop
+export const dummyYrEntityIntermediate: YrForecastEntity = {
+  id: "2",
+  attributes: {
+    forecast: {
+      air_temperature:15.0,
+      id: "2",
+      probability_of_precipitation: 14,
+      probability_of_thunder: 0.2,
+      symbol_code: "cloudy",
+      symbol_confidence: "somewhat certain",
+      wind_from_direction: 330.0,
+      wind_direction: Enum_Componentforecastforecast_Wind_Direction.Nw,
+      wind_speed: 7,
+      wind_speed_of_gust: 9,
+    },
+    unique_constraint: "this_is_unique_2",
+    uuid: "2",
   }
 }
 

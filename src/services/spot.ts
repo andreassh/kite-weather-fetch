@@ -10,6 +10,17 @@ export const SPOT_FIELDS = `
       name
       lat
       long
+      wind_direction {
+        N { value }
+        NE { value }
+        E { value }
+        SE { value }
+        S { value }
+        SW { value }
+        W { value }
+        NW { value }
+        N { value }
+      }
     }
   }
 `;

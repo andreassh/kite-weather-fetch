@@ -43,7 +43,6 @@ export const UPDATE_YR_FORECAST = `
 `
 
 
-
 export const doesYrForecastExist = async (unique_constraint: string):Promise<EntryID> => {
   /**
    * Return string or number of entry ID if entry exists

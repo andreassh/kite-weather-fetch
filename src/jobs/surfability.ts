@@ -1,4 +1,7 @@
-import { ComponentForecastForecast, SpotEntity, YrForecast } from "../../types-kite-app/dist/es/Types";
+import dotenv from "dotenv";
+import { ComponentForecastForecast, Enum_Componentspottrafficlight_Value, SpotEntity, YrForecast } from "../../types-kite-app/dist/es/Types";
+import errorHandler from "../errorHandler";
+import getSpots from "../services/spot";
 
 export type Surfable = {
   beginner: boolean;
@@ -6,6 +9,8 @@ export type Surfable = {
   advanced: boolean;
 }
 
+
+dotenv.config();
 /** 
  * Thresholds
  * 
@@ -17,6 +22,11 @@ const defaultSurfability = {
   beginner: true,
   intermediate: true,
   advanced: true,
+}
+
+export interface RunProps {
+  body: any;
+  headers: any;
 }
 
 export const thunderThres = parseFloat(process.env.THUNDER_THRES)||0.4;
@@ -69,23 +79,23 @@ export const calcRainSurfA = (precipationProp:number, initSurfA=defaultSurfabili
 
 
 // TODO: change spot input to simpler form (wind dir data)
-export const calcWindDirSurfA = (spot:SpotEntity, initSurfA=defaultSurfability):Surfable => {
+export const calcWindDirSurfA = (windDirColor: Enum_Componentspottrafficlight_Value, initSurfA=defaultSurfability):Surfable => {
 
   const surfA = {...initSurfA};
 
-  // TODO: set surfability according to wind direction....
-  
-  return {
-    beginner: false,
-    intermediate: false,
-    advanced: false,
+  if (windDirColor !== Enum_Componentspottrafficlight_Value.Green){
+    surfA.beginner = false;
+  }
+  if (windDirColor === Enum_Componentspottrafficlight_Value.Red){
+    surfA.intermediate = false;
+    surfA.advanced = false;
   }
 
   return surfA;
 }
 
 
-export const surfability = (spot:SpotEntity, forecast: ComponentForecastForecast):Surfable => {
+export const spotSurfability = (spot:SpotEntity, forecast: ComponentForecastForecast):Surfable => {
 
   /**
    * Surfability takes a spot and a forecast as inputs and determines if a spot is surfable from the forecast data.
@@ -119,15 +129,62 @@ export const surfability = (spot:SpotEntity, forecast: ComponentForecastForecast
    * Check for wind direction
    * Should match directions for spot and level
    *  */ 
-  surfA = calcWindDirSurfA(spot, surfA);
+  surfA = calcWindDirSurfA(spot.attributes.wind_direction[forecast.wind_direction]?.value, surfA);
   
   // TODO: make check for gusty wind
 
   return surfA;
 }
 
+export const processForeCast = async (spot:SpotEntity, forecast:ComponentForecastForecast) => {
+  const surfA = await spotSurfability(spot, forecast);
+
+  // TODO: save surfA
+}
+
+export const processSpot = async (spot:SpotEntity) => {
+  console.log('Processing spot', spot);
+
+  const forecasts:ComponentForecastForecast[] = [];
+  
+  // TODO: get forecasts to process;
+  await getForecasts....
+
+  for (let i=0; i<forecasts.length;i++) {
+    await processForeCast(spot, forecasts[i]);
+  }
+}
+
+
+export const calcSurfability = async (req?:RunProps):Promise<boolean> => {
+  let params = {};
+  if (req?.body) {
+    params = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  }
+  console.log("Running job from params", params);
+
+  let spots:SpotEntity[] = [];
+  // get all spots.
+  try {
+    spots = await getSpots();
+  } catch(err) {
+    console.error(err);
+    errorHandler("Failed to fetch spots");
+  }
+
+  // for each spot, get forecast
+  for (let i=0; i<spots.length;i++) {
+    await processSpot(spots[i]);
+  }
+
+  // returning dummy promise for now
+  console.log('Successfully finished fetching data for all Spots')
+  return await new Promise((res) => res(true));
+};
+
 export default {
-  surfability, 
+  calcSurfability,
+  spotSurfability, 
   calcThunderSurfA,
   thunderThres,
   thunderBeginnerThres,
@@ -135,5 +192,6 @@ export default {
   windThres,
   windBeginnerMax,
   calcRainSurfA,
-  precipationThres
+  precipationThres,
+  calcWindDirSurfA
 };
