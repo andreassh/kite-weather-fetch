@@ -118,4 +118,6 @@ describe("Testing surfability calculations", () => {
     // TODO: test more examples
   });
 
+  // TODO: add test with calcSurfability
+
 });

@@ -1,13 +1,17 @@
 import dotenv from "dotenv";
-import { ComponentForecastForecast, Enum_Componentspottrafficlight_Value, SpotEntity, YrForecast } from "../../types-kite-app/dist/es/Types";
+import { ComponentForecastForecast, Enum_Componentspottrafficlight_Value, SpotEntity, YrForecast, YrForecastEntity } from "../../types-kite-app/dist/es/Types";
 import errorHandler from "../errorHandler";
 import getSpots from "../services/spot";
+import { getYrForecasts } from "../services/yrForecast";
+import { createOrUpdateSpotSurfability } from "../services/spotSurfability";
 
 export type Surfable = {
   beginner: boolean;
   intermediate: boolean;
   advanced: boolean;
 }
+
+/* export type Surfable = ComponentForecastSurfable & {} */
 
 
 dotenv.config();
@@ -136,21 +140,43 @@ export const spotSurfability = (spot:SpotEntity, forecast: ComponentForecastFore
   return surfA;
 }
 
-export const processForeCast = async (spot:SpotEntity, forecast:ComponentForecastForecast) => {
-  const surfA = await spotSurfability(spot, forecast);
+export const processForeCast = async (spot:SpotEntity, forecast:YrForecastEntity):Promise<boolean> => {
+  const surfA = spotSurfability(spot, forecast.attributes.forecast);
 
-  // TODO: save surfA
+  // TODO: surfable should be more granular. Right now only true false. Should be traffic light
+  const params = {
+    spot: spot.id,
+    surfable: {
+      beginner: { value: surfA.beginner ? Enum_Componentspottrafficlight_Value.Green : Enum_Componentspottrafficlight_Value.Red},
+      intermediate: { value: surfA.intermediate ? Enum_Componentspottrafficlight_Value.Green : Enum_Componentspottrafficlight_Value.Red},
+      advanced: { value: surfA.advanced ? Enum_Componentspottrafficlight_Value.Green : Enum_Componentspottrafficlight_Value.Red}
+    },
+    time: forecast.attributes.timestamp,
+    yr_forecast: forecast.id,
+    unique_constraint: `${spot.id}_${forecast.attributes.timestamp}`,
+  }
+
+  try {
+    await createOrUpdateSpotSurfability(params);
+  } catch (err) {
+    console.error("Error creating surability for spot", spot.id);
+  }
+
+  return true;
 }
 
 export const processSpot = async (spot:SpotEntity) => {
-  console.log('Processing spot', spot);
-
-  const forecasts:ComponentForecastForecast[] = [];
+  let forecasts:YrForecastEntity[] = [];
   
-  // TODO: get forecasts to process;
-  await getForecasts....
+  try {
+    forecasts = await getYrForecasts(spot.id, new Date().toISOString());
+  } catch (err) {
+    console.error(err);
+    errorHandler("Failed to fetch spots");
+  }
 
   for (let i=0; i<forecasts.length;i++) {
+    console.log('processing forecast', forecasts[i]);
     await processForeCast(spot, forecasts[i]);
   }
 }
@@ -178,7 +204,7 @@ export const calcSurfability = async (req?:RunProps):Promise<boolean> => {
   }
 
   // returning dummy promise for now
-  console.log('Successfully finished fetching data for all Spots')
+  console.log('Successfully finished calculating surfability for all Spots')
   return await new Promise((res) => res(true));
 };
 

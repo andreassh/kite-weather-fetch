@@ -1,5 +1,5 @@
 import { FcooForecastData } from "../../src/services/fcoo";
-import { FcooForecastInput } from "../../types-kite-app/dist/es/Types";
+import { Enum_Componentforecastforecast_Wind_Direction, FcooForecastInput } from "../../types-kite-app/dist/es/Types";
 
 export const dummyFcooForecastInput:FcooForecastInput = {
     forecast: {
@@ -11,8 +11,10 @@ export const dummyFcooForecastInput:FcooForecastInput = {
         symbol_confidence: '',
         wind_from_direction: 39,
         wind_speed: 6.25,
+        wind_direction: Enum_Componentforecastforecast_Wind_Direction.Ne,
         wind_speed_of_gust: -1
     },
+    spot: "1",
     timestamp: '2023-03-28T06:00:00Z',
     unique_constraint: '2023-03-28T06:00:00Z_55.81911.919'
 }

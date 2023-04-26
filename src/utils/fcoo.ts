@@ -14,10 +14,11 @@ export const covertFcooWindDirToDegrees = (windDir:number) => {
   return windDir < 0 ? 360 - (windDir * factor) : windDir * factor;
 }
 
-export const convertFcooForecastToInputs = (forecast:FcooForecastData):FcooForecastInput[] => { 
+export const convertFcooForecastToInputs = (spot: string, forecast:FcooForecastData):FcooForecastInput[] => { 
   return forecast.WindSpeed.windspeed.time.map((t,idx) => {
     const windDegrees = covertFcooWindDirToDegrees(forecast.Wind.UGRD.data[idx]);
     return {
+      spot: spot,
       forecast: {
         air_temperature: forecast.AirTemperature.TMP.data[idx],
         probability_of_precipitation: forecast.Precipitation.precip.data[idx],

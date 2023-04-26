@@ -83,12 +83,12 @@ describe("Testing fetch of forecasts", () => {
   });
 
   it('it should convert YRForecastData to YrForecastInput', () => {
-    const conversion = convertYrForecastToInputs(dummyYrSpotData);
+    const conversion = convertYrForecastToInputs("1", dummyYrSpotData);
     expect(conversion[0]).toEqual(dummyYrForecastInput);
   });
-
+  
   it('it should convert FcooForecastData to FcooForecastInput', () => {
-    const conversion = convertFcooForecastToInputs(dummyFcooSpotData);
+    const conversion = convertFcooForecastToInputs("1", dummyFcooSpotData);
     expect(conversion[0]).toEqual(dummyFcooForecastInput);
   });
 

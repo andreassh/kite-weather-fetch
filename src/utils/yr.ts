@@ -8,9 +8,10 @@ const symbolCodeToStr = (code:string):string|undefined => {
   return undefined;
 }
 
-export const convertYrForecastToInputs = (forecast:YRForecastData):YrForecastInput[] => {
+export const convertYrForecastToInputs = (spot: string,forecast:YRForecastData):YrForecastInput[] => {
   return forecast.properties.timeseries.map((t) => {
     return {
+      spot: spot,
       forecast: {
         air_temperature: t.data.instant.details.air_temperature,
         probability_of_precipitation: t.data.next_1_hours?.details.probability_of_precipitation,

@@ -2,6 +2,6 @@ import * as fetchForecastJobs from "./fetchForecast";
 import * as surfabilityJobs from "./surfability";
 
 export const fetchForecast = fetchForecastJobs.fetchForecast;
-export const surfability = surfabilityJobs.surfability;
+export const calcSurfability = surfabilityJobs.calcSurfability;
 
-export default {fetchForecast,surfability};
+export default {fetchForecast,calcSurfability};

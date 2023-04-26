@@ -11,10 +11,12 @@ export const dummyYrForecastInput:YrForecastInput = {
     symbol_confidence: '',
     wind_from_direction: 0,
     wind_speed: 0,
+    wind_direction: Enum_Componentforecastforecast_Wind_Direction.N,
     wind_speed_of_gust: 0,
   },
   provider_updated_at: "2023-03-29T07:43:45Z",
   timestamp: '2023-03-29T07:43:45Z',
+  spot: "1",
   unique_constraint: '2023-03-29T07:43:45Z_11.937355.82140',
 }
 

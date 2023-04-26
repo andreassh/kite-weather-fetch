@@ -26,7 +26,7 @@ export const processYrSpot = async (spot: SpotEntity) => {
   }
 
   // covert data to yr forecast inputs
-  const timeseries = convertYrForecastToInputs(yrForecast);
+  const timeseries = convertYrForecastToInputs(spot.id, yrForecast);
   // loop everty spot data entitiy to save info
   for(let i=0;i<timeseries.length;i++) {
     try {
@@ -48,7 +48,7 @@ export const processFcooSpot = async (spot: SpotEntity) => {
   }
 
   // covert data to yr forecast inputs
-  const timeseries = convertFcooForecastToInputs(forecast);
+  const timeseries = convertFcooForecastToInputs(spot.id, forecast);
   // loop everty spot data entitiy to save info
   for(let i=0;i<timeseries.length;i++) {
     try {
@@ -61,7 +61,6 @@ export const processFcooSpot = async (spot: SpotEntity) => {
 }
 
 export const processSpot = async (spot:SpotEntity) => {
-  console.log('Processing spot', spot);
   await processYrSpot(spot);
   await processFcooSpot(spot);
 }
